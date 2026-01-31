@@ -14,5 +14,13 @@
     "oneTime": true,
     "created": 1769863391,
     "expires": 1769949791
+  },
+  "perm_LdOX7l_h-TsX235R": {
+    "label": "perm",
+    "userId": "944050502935650364",
+    "hwid": null,
+    "oneTime": true,
+    "created": 1769863787,
+    "expires": 1769867387
   }
 }
