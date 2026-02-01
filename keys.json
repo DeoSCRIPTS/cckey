@@ -30,5 +30,13 @@
     "oneTime": true,
     "created": 1769864817,
     "expires": 1769951217
+  },
+  "sigma_QU5FsKgaZsN-dTwe": {
+    "label": "sigma",
+    "userId": null,
+    "hwid": null,
+    "oneTime": true,
+    "created": 1769930057,
+    "expires": 1770016457
   }
 }
