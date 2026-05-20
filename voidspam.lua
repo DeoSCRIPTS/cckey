@@ -242,10 +242,45 @@ local clientv
 local clientva
 local hrp
 
+local ranges = {
+    {-9223372036854775807, -8000000000000000000},
+    {-7800000000000000000, -7000000000000000000},
+    {-6800000000000000000, -6000000000000000000},
+    {-5800000000000000000, -5000000000000000000},
+    {-4800000000000000000, -4000000000000000000},
+
+    {-3800000000000000000, -3000000000000000000},
+    {-2800000000000000000, -2000000000000000000},
+    {-1800000000000000000, -1000000000000000000},
+    {-900000000000000000, -500000000000000000},
+    {-400000000000000000, -100000000000000000},
+
+    {100000000000000000, 400000000000000000},
+    {500000000000000000, 900000000000000000},
+    {1000000000000000000, 1500000000000000000},
+    {1600000000000000000, 2000000000000000000},
+    {2100000000000000000, 2600000000000000000},
+
+    {2700000000000000000, 3200000000000000000},
+    {3300000000000000000, 3800000000000000000},
+    {3900000000000000000, 4500000000000000000},
+    {4600000000000000000, 5200000000000000000},
+    {5300000000000000000, 6000000000000000000},
+
+    {6100000000000000000, 6800000000000000000},
+    {6900000000000000000, 7600000000000000000},
+    {7700000000000000000, 8400000000000000000},
+    {8500000000000000000, 9000000000000000000},
+    {9100000000000000000, 9223372036854775807},
+}
+
+local function betterRandom()
+    local r = ranges[math.random(1, #ranges)]
+    return math.random(r[1], r[2])
+end
+
 connect(UserInputService.InputBegan, function(input, gp)
-    if gp then
-        return
-    end
+    if gp then return end
 
     if input.KeyCode == Enum.KeyCode.P then
         enabled = not enabled
@@ -254,55 +289,47 @@ connect(UserInputService.InputBegan, function(input, gp)
 end)
 
 connect(RunService.Heartbeat, function()
-    if not enabled then
-        return
-    end
+    if not enabled then return end
 
     pcall(function()
         local character = LocalPlayer.Character
-
-        if not character then
-            return
-        end
+        if not character then return end
 
         hrp = character:FindFirstChild("HumanoidRootPart")
-
-        if not hrp then
-            return
-        end
+        if not hrp then return end
 
         clientc = hrp.CFrame
         clientv = hrp.AssemblyLinearVelocity
         clientva = hrp.AssemblyAngularVelocity
 
-        hrp.CFrame = CFrame.new(
-            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
-            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
-            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646)
-        ) * CFrame.Angles(
+        local offset = Vector3.new(
+            betterRandom(),
+            betterRandom(),
+            betterRandom()
+        )
+
+        hrp.CFrame = CFrame.new(offset) * CFrame.Angles(
             math.rad(180),
             math.rad(180),
             math.rad(180)
         )
 
         hrp.AssemblyLinearVelocity = Vector3.new(
-            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
-            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
-            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646)
+            betterRandom(),
+            betterRandom(),
+            betterRandom()
         )
 
         hrp.AssemblyAngularVelocity = Vector3.new(
-            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
-            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
-            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646)
+            betterRandom(),
+            betterRandom(),
+            betterRandom()
         )
     end)
 end)
 
 RunService:BindToRenderStep("csync", Enum.RenderPriority.First.Value, function()
-    if not enabled then
-        return
-    end
+    if not enabled then return end
 
     if hrp then
         pcall(function()
