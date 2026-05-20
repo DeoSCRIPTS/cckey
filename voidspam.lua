@@ -1,16 +1,45 @@
+--[[
+
+██████╗  █████╗ ███╗   ██╗██╗    ██╗ █████╗ ██████╗ ███████╗
+██╔══██╗██╔══██╗████╗  ██║██║    ██║██╔══██╗██╔══██╗██╔════╝
+██████╔╝███████║██╔██╗ ██║██║ █╗ ██║███████║██████╔╝█████╗
+██╔══██╗██╔══██║██║╚██╗██║██║███╗██║██╔══██║██╔══██╗██╔══╝
+██████╔╝██║  ██║██║ ╚████║╚███╔███╔╝██║  ██║██║  ██║███████╗
+╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+
+    > best hvh lua out there
+    > banware framework
+    > build 14 / v1.4.7
+    > created by bananalyze (check him out on discord!)
+
+]]
+
 --//====================================================--
---//				INITIATE CONFIGURATIONS				--
+--//                    CONFIGURATION                  --
 --//====================================================--
+
+getgenv().banware = getgenv().banware or {
+    key = "banware_EVcYLFxkmfMshdKJ",
+    author = "bananalyze",
+    build_number = 14,
+    resolver = "adaptive", -- adaptive / offense / defense
+    qot = false
+}
+
+--//====================================================--
+--//                INITIATE CONFIGURATIONS            --
+--//====================================================--
+
 local cfg = getgenv().banware
 
 --//====================================================--
 --//                      SERVICES                      --
 --//====================================================--
 
-local Players           = game:GetService("Players")
-local RunService        = game:GetService("RunService")
-local UserInputService  = game:GetService("UserInputService")
-local HttpService       = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local HttpService = game:GetService("HttpService")
 
 local LocalPlayer = Players.LocalPlayer
 
@@ -26,36 +55,9 @@ local SCRIPT_URL  = "https://raw.githubusercontent.com/DeoSCRIPTS/cckey/refs/hea
 
 local VALID_RESOLVERS = {
     adaptive = true,
-    offense  = true,
-    defense  = true
+    offense = true,
+    defense = true
 }
-
---//====================================================--
---//                     EXECUTION                     --
---//====================================================--
-
-local selected = tostring(cfg.script2run or ""):upper()
-
-if selected == "" then
-
-elseif selected == "UE" then
-    loadstring(game:HttpGet(
-        "https://raw.githubusercontent.com/smi9/UnnamedCheats/refs/heads/main/loader.lua"
-    ))()
-
-elseif selected == "KICIAFREE" then
-    loadstring(game:HttpGet(
-        "https://kicia.com/"
-    ))()
-
-elseif selected == "KICIA" then
-    loadstring(game:HttpGet(
-        "https://kicia.com/paid"
-    ))()
-
-else
-    warn("[ banware ] invalid script2run option")
-end
 
 --//====================================================--
 --//                     CLEANUP                       --
@@ -70,7 +72,7 @@ if getgenv().banware_connections then
 end
 
 pcall(function()
-    RunService:UnbindFromRenderStep("banware_sync")
+    RunService:UnbindFromRenderStep("csync")
 end)
 
 getgenv().banware_connections = {}
@@ -82,8 +84,8 @@ local connections = getgenv().banware_connections
 --//====================================================--
 
 local function terminate(reason)
-    LocalPlayer:Kick("[ banware ] "..tostring(reason))
-    return error(reason, 0)
+    LocalPlayer:Kick("[ banware ] " .. tostring(reason))
+    error(reason, 0)
 end
 
 local function connect(signal, callback)
@@ -136,8 +138,8 @@ if versionSuccess then
     if latestVersion ~= CURRENT_VERSION then
         terminate(
             "outdated version\n" ..
-            "current: "..CURRENT_VERSION.."\n" ..
-            "latest: "..latestVersion
+            "current: " .. CURRENT_VERSION .. "\n" ..
+            "latest: " .. latestVersion
         )
     end
 else
@@ -186,7 +188,7 @@ end
 local qot =
     queue_on_teleport
     or queueonteleport
-    or syn.queue_on_teleport
+    or (syn and syn.queue_on_teleport)
 
 if cfg.qot == true and qot then
     qot(string.format([[
@@ -196,7 +198,6 @@ if cfg.qot == true and qot then
             build_number = 14,
             resolver = "%s",
             qot = true,
-            script2run = "%s"
         }
 
         loadstring(game:HttpGet("%s"))()
@@ -214,7 +215,7 @@ end
 task.wait(0.15)
 
 print([[
- 
+
 ██████╗  █████╗ ███╗   ██╗██╗    ██╗ █████╗ ██████╗ ███████╗
 ██╔══██╗██╔══██╗████╗  ██║██║    ██║██╔══██╗██╔══██╗██╔════╝
 ██████╔╝███████║██╔██╗ ██║██║ █╗ ██║███████║██████╔╝█████╗
@@ -243,39 +244,45 @@ print("[ controls  ] PRESS P TO TOGGLE")
 print("[ community ] .gg/luas")
 
 --//====================================================--
---//                     VOID SPAM                      --
+--//                     VOID SPAM                     --
 --//====================================================--
 
-local rs = game:GetService("RunService")
-local UIS = game:GetService("UserInputService")
-
 local enabled = false
+
 local clientc
 local clientv
 local clientva
+local hrp
 
-function betterRandom(mi, ma, dmi, dma)
-    local val = math.random(mi, ma)
-    repeat
-        val = math.random(mi, ma)
-    until val < dmi or val > dma
-    return val
-end
+connect(UserInputService.InputBegan, function(input, gp)
+    if gp then
+        return
+    end
 
--- P toggle
-UIS.InputBegan:Connect(function(input, gp)
-    if gp then return end
     if input.KeyCode == Enum.KeyCode.P then
         enabled = not enabled
         print("[ banware ] Status: " .. (enabled and "ON" or "OFF"))
     end
 end)
 
-rs.Heartbeat:Connect(function()
-    if not enabled then return end
+connect(RunService.Heartbeat, function()
+    if not enabled then
+        return
+    end
 
     pcall(function()
-        hrp = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
+        local character = LocalPlayer.Character
+
+        if not character then
+            return
+        end
+
+        hrp = character:FindFirstChild("HumanoidRootPart")
+
+        if not hrp then
+            return
+        end
+
         clientc = hrp.CFrame
         clientv = hrp.AssemblyLinearVelocity
         clientva = hrp.AssemblyAngularVelocity
@@ -284,7 +291,11 @@ rs.Heartbeat:Connect(function()
             betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
             betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
             betterRandom(-2147483646, 2147483646, -1147483646, 1147483646)
-        ) * CFrame.Angles(math.rad(math.pi), math.rad(math.pi), math.rad(math.pi))
+        ) * CFrame.Angles(
+            math.rad(180),
+            math.rad(180),
+            math.rad(180)
+        )
 
         hrp.AssemblyLinearVelocity = Vector3.new(
             betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
@@ -300,8 +311,10 @@ rs.Heartbeat:Connect(function()
     end)
 end)
 
-rs:BindToRenderStep("csync", Enum.RenderPriority.First.Value, function()
-    if not enabled then return end
+RunService:BindToRenderStep("csync", Enum.RenderPriority.First.Value, function()
+    if not enabled then
+        return
+    end
 
     if hrp then
         pcall(function()
