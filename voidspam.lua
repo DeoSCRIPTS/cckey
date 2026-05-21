@@ -1,4 +1,4 @@
---[[
+-[[
 
 ██████╗  █████╗ ███╗   ██╗██╗    ██╗ █████╗ ██████╗ ███████╗
 ██╔══██╗██╔══██╗████╗  ██║██║    ██║██╔══██╗██╔══██╗██╔════╝
@@ -11,6 +11,7 @@
     > banware framework
     > build 14 / v1.4.7
     > created by bananalyze (check him out on discord!)
+    > https://discord.gg/c8cyda5UgJ
 
 ]]
 
