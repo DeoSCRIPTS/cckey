@@ -15,17 +15,6 @@
 ]]
 
 --//====================================================--
---//                    CONFIGURATION                  --
---//====================================================--
-
-getgenv().banware = getgenv().banware or {
-    key = "banware_EVcYLFxkmfMshdKJ",
-    author = "bananalyze",
-    build_number = 14,
-    resolver = "adaptive" -- adaptive / offense / defense
-}
-
---//====================================================--
 --//                INITIATE CONFIGURATIONS            --
 --//====================================================--
 
