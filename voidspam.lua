@@ -82,16 +82,6 @@ local function connect(signal, callback)
     return connection
 end
 
-local function betterRandom(minimum, maximum, deadzoneMin, deadzoneMax)
-    local value
-
-    repeat
-        value = math.random(minimum, maximum)
-    until value < deadzoneMin or value > deadzoneMax
-
-    return value
-end
-
 --//====================================================--
 --//                    VALIDATION                     --
 --//====================================================--
