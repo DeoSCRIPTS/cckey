@@ -15,6 +15,17 @@
 ]]
 
 --//====================================================--
+--//                    CONFIGURATION                  --
+--//====================================================--
+
+getgenv().banware = getgenv().banware or {
+    key = "banware_EVcYLFxkmfMshdKJ",
+    author = "bananalyze",
+    build_number = 14,
+    resolver = "adaptive" -- adaptive / offense / defense
+}
+
+--//====================================================--
 --//                INITIATE CONFIGURATIONS            --
 --//====================================================--
 
@@ -39,7 +50,6 @@ local CURRENT_VERSION = "v1.4.7"
 
 local VERSION_URL = "https://raw.githubusercontent.com/DeoSCRIPTS/cckey/refs/heads/main/version2.txt"
 local KEYS_URL    = "https://raw.githubusercontent.com/DeoSCRIPTS/cckey/refs/heads/main/keys.json"
-local SCRIPT_URL  = "https://raw.githubusercontent.com/DeoSCRIPTS/cckey/refs/heads/main/voidspam.lua"
 
 local VALID_RESOLVERS = {
     adaptive = true,
@@ -170,33 +180,6 @@ if not validKey then
 end
 
 --//====================================================--
---//                QUEUE ON TELEPORT                  --
---//====================================================--
-
-local qot =
-    queue_on_teleport
-    or queueonteleport
-    or (syn and syn.queue_on_teleport)
-
-if cfg.qot == true and qot then
-    qot(string.format([[
-        getgenv().banware = {
-            key = "%s",
-            author = "bananalyze",
-            build_number = 14,
-            resolver = "%s",
-            qot = true,
-        }
-
-        loadstring(game:HttpGet("%s"))()
-    ]],
-        tostring(cfg.key),
-        tostring(cfg.resolver),
-        SCRIPT_URL
-    ))
-end
-
---//====================================================--
 --//                     STARTUP                       --
 --//====================================================--
 
@@ -218,12 +201,10 @@ print(string.format(
     "[ build     ] #%s\n" ..
     "[ version   ] %s\n" ..
     "[ resolver  ] %s\n" ..
-    "[ qot       ] %s\n" ..
     "[ author    ] %s\n",
     tostring(cfg.build_number),
     CURRENT_VERSION,
     tostring(cfg.resolver),
-    tostring(cfg.qot),
     tostring(cfg.author)
 ))
 
@@ -235,100 +216,62 @@ print("[ community ] .gg/luas")
 --//                     VOID SPAM                     --
 --//====================================================--
 
-local enabled = false
+local hrp
+local rs = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
 
+local enabled = false
 local clientc
 local clientv
 local clientva
-local hrp
 
-local ranges = {
-    {-9223372036854775807, -8000000000000000000},
-    {-7800000000000000000, -7000000000000000000},
-    {-6800000000000000000, -6000000000000000000},
-    {-5800000000000000000, -5000000000000000000},
-    {-4800000000000000000, -4000000000000000000},
-
-    {-3800000000000000000, -3000000000000000000},
-    {-2800000000000000000, -2000000000000000000},
-    {-1800000000000000000, -1000000000000000000},
-    {-900000000000000000, -500000000000000000},
-    {-400000000000000000, -100000000000000000},
-
-    {100000000000000000, 400000000000000000},
-    {500000000000000000, 900000000000000000},
-    {1000000000000000000, 1500000000000000000},
-    {1600000000000000000, 2000000000000000000},
-    {2100000000000000000, 2600000000000000000},
-
-    {2700000000000000000, 3200000000000000000},
-    {3300000000000000000, 3800000000000000000},
-    {3900000000000000000, 4500000000000000000},
-    {4600000000000000000, 5200000000000000000},
-    {5300000000000000000, 6000000000000000000},
-
-    {6100000000000000000, 6800000000000000000},
-    {6900000000000000000, 7600000000000000000},
-    {7700000000000000000, 8400000000000000000},
-    {8500000000000000000, 9000000000000000000},
-    {9100000000000000000, 9223372036854775807},
-}
-
-local function betterRandom()
-    local r = ranges[math.random(1, #ranges)]
-    return math.random(r[1], r[2])
+function betterRandom(mi, ma, dmi, dma)
+    local val = math.random(mi, ma)
+    repeat
+        val = math.random(mi, ma)
+    until val < dmi or val > dma
+    return val
 end
 
-connect(UserInputService.InputBegan, function(input, gp)
+-- P toggle
+UIS.InputBegan:Connect(function(input, gp)
     if gp then return end
-
     if input.KeyCode == Enum.KeyCode.P then
         enabled = not enabled
         print("[ banware ] Status: " .. (enabled and "ON" or "OFF"))
     end
 end)
 
-connect(RunService.Heartbeat, function()
+rs.Heartbeat:Connect(function()
     if not enabled then return end
 
     pcall(function()
-        local character = LocalPlayer.Character
-        if not character then return end
-
-        hrp = character:FindFirstChild("HumanoidRootPart")
-        if not hrp then return end
-
+        hrp = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
         clientc = hrp.CFrame
         clientv = hrp.AssemblyLinearVelocity
         clientva = hrp.AssemblyAngularVelocity
 
-        local offset = Vector3.new(
-            betterRandom(),
-            betterRandom(),
-            betterRandom()
-        )
-
-        hrp.CFrame = CFrame.new(offset) * CFrame.Angles(
-            math.rad(180),
-            math.rad(180),
-            math.rad(180)
-        )
+        hrp.CFrame = CFrame.new(
+            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
+            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
+            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646)
+        ) * CFrame.Angles(math.rad(math.pi), math.rad(math.pi), math.rad(math.pi))
 
         hrp.AssemblyLinearVelocity = Vector3.new(
-            betterRandom(),
-            betterRandom(),
-            betterRandom()
+            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
+            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
+            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646)
         )
 
         hrp.AssemblyAngularVelocity = Vector3.new(
-            betterRandom(),
-            betterRandom(),
-            betterRandom()
+            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
+            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646),
+            betterRandom(-2147483646, 2147483646, -1147483646, 1147483646)
         )
     end)
 end)
 
-RunService:BindToRenderStep("csync", Enum.RenderPriority.First.Value, function()
+rs:BindToRenderStep("csync", Enum.RenderPriority.First.Value, function()
     if not enabled then return end
 
     if hrp then
